@@ -77,6 +77,7 @@ class PyRyxApi:
                                question_payload):
         response = self.executeWorkflow(app_id, question_payload)
         job_id = response.json()['id']
+        print("Job ID: " + job_id + " submitted")
         job_state = 'Queued'
         while(job_state == 'Queued'):
             job = self.checkJobState(job_id)
@@ -84,5 +85,23 @@ class PyRyxApi:
             print(j_state)
             if (j_state == 'Completed'):
                 job_state = j_state
+                print(job)
             time.sleep(1)
         return self.fetchJobOutput(job_id)
+
+
+    def executeAndCheckCompletion(self, app_id,
+                               question_payload):
+        response = self.executeWorkflow(app_id, question_payload)
+        job_id = response.json()['id']
+        print("Job ID: " + job_id + " submitted")
+        job_state = 'Queued'
+        while(job_state == 'Queued'):
+            job = self.checkJobState(job_id)
+            j_state = job['status']
+            print(j_state)
+            if (j_state == 'Completed'):
+                job_state = j_state
+                print(job)
+            time.sleep(1)
+        return job['disposition']  
